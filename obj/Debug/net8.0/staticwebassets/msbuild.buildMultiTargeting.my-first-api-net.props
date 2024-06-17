@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\my-first-api-net.props" />
-</Project>
