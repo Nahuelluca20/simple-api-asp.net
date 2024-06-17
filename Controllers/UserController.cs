@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Http.HttpResults;
+using my_first_api_net.Models.User;
+
 namespace my_first_api_net.Controllers
 {
   public static class UserController
@@ -6,10 +9,10 @@ namespace my_first_api_net.Controllers
     {
       app.MapGet("/users", () => "hello User");
 
-      app.MapGet("/users/{id:guid}", (Guid id) =>
-      {
-        return Results.Ok($"User ID: {id}");
-      });
+      // app.MapGet("/users/{id:guid}", Results<Ok<User>, NotFound> (Guid id) =>
+      // {
+      //   return Results.Ok($"User ID: {id}");
+      // });
 
       app.MapPost("/users", () => "post user");
 
