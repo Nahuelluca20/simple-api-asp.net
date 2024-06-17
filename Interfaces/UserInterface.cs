@@ -6,8 +6,7 @@ namespace my_first_api_net.Interfaces
   {
     Task<User?> GetUserById(Guid id);
     Task<IEnumerable<User>> GetAllUsersAsync();
-
-    Task<User> CreateUserAsync();
+    Task<User> CreateUserAsync(User user);
     Task<User?> UpdateUserAsync(Guid id, UpdatedUser updatedUser);
     Task<bool> DeleteUserAsync(Guid id);
   }

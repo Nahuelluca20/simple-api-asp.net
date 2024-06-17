@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using my_first_api_net.Interfaces;
 using my_first_api_net.Models.User;
+using my_first_api_net.Services;
 
 namespace my_first_api_net.Controllers
 {
@@ -8,7 +9,9 @@ namespace my_first_api_net.Controllers
   {
     public static WebApplication MapUserEndpoints(this WebApplication app)
     {
-      app.MapGet("/users", () => "hello User");
+      app.MapGet("/users", async (IUserService userService) =>
+        await userService.GetAllUsersAsync()
+      );
 
       app.MapGet("/users/{id:guid}", async (Guid id, IUserService userService) =>
       {
@@ -18,17 +21,47 @@ namespace my_first_api_net.Controllers
 
       });
 
-      app.MapPost("/users", () => "post user");
-
-
-      app.MapPut("/users/{id:guid}", (Guid id) =>
+      app.MapPost("/users", async (HttpContext context, IUserService userService) =>
       {
-        return Results.Ok($"Updated User ID: {id}");
+        var user = await context.Request.ReadFromJsonAsync<User>();
+        if (user == null)
+        {
+          return Results.BadRequest("User data is null");
+        }
+
+        var createdUser = await userService.CreateUserAsync(user);
+        return Results.Created($"/users/{createdUser.Id}", createdUser);
       });
 
-      app.MapDelete("/user/{id:guid}", (Guid id) =>
+
+      app.MapPut("/users/{id:guid}", async (Guid id, HttpContext context, IUserService userService) =>
       {
-        return Results.Ok($"Delete User ID: {id}");
+        var userNewInfo = await context.Request.ReadFromJsonAsync<UpdatedUser>();
+        if (userNewInfo == null)
+        {
+          return Results.BadRequest("User data is null");
+        }
+
+        var updatedUser = await userService.UpdateUserAsync(id, userNewInfo);
+
+        if (updatedUser == null)
+        {
+          return Results.NotFound("User not found");
+        }
+
+        return Results.Ok(updatedUser);
+      });
+
+      app.MapDelete("/user/{id:guid}", async (Guid id, IUserService userService) =>
+      {
+        var isDeleted = await userService.DeleteUserAsync(id);
+
+        if (!isDeleted)
+        {
+          return Results.NotFound($"User with ID {id} not found");
+        }
+
+        return Results.Ok($"User with ID {id} deleted successfully");
       });
 
       return app;
