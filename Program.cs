@@ -2,9 +2,11 @@ using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using my_first_api_net.Controllers;
 using my_first_api_net.Data;
+using my_first_api_net.Interfaces;
+using my_first_api_net.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+builder.Services.AddScoped<IUserService, UserService>();
 
 static string HelloWord()
 {
@@ -13,18 +15,20 @@ static string HelloWord()
 
 Env.Load();
 
-// Leer las variables de entorno
+// Read Envs
 var host = Environment.GetEnvironmentVariable("POSTGRES_HOST");
 var db = Environment.GetEnvironmentVariable("POSTGRES_DB");
 var user = Environment.GetEnvironmentVariable("POSTGRES_USER");
 var password = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
 
-// Construir la cadena de conexión utilizando las variables de entorno
+// Create string for db connection
 var connectionString = $"Host={host};Database={db};Username={user};Password={password}";
 
-// Configurar el DbContext para usar PostgreSQL
+// Setup DbContext for use PostgreSQL
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
+
+var app = builder.Build();
 
 app.MapGet("/", HelloWord);
 app.MapUserEndpoints();

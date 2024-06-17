@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http.HttpResults;
+using my_first_api_net.Interfaces;
 using my_first_api_net.Models.User;
 
 namespace my_first_api_net.Controllers
@@ -9,10 +10,13 @@ namespace my_first_api_net.Controllers
     {
       app.MapGet("/users", () => "hello User");
 
-      // app.MapGet("/users/{id:guid}", Results<Ok<User>, NotFound> (Guid id) =>
-      // {
-      //   return Results.Ok($"User ID: {id}");
-      // });
+      app.MapGet("/users/{id:guid}", async (Guid id, IUserService userService) =>
+      {
+        var user = await userService.GetUserById(id);
+
+        return user == null ? Results.NotFound() : Results.Ok(user);
+
+      });
 
       app.MapPost("/users", () => "post user");
 

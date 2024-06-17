@@ -7,5 +7,6 @@ namespace my_first_api_net.Models.User
     public int? Age { get; set; }
     public string? Email { get; set; }
     public string? Password { get; set; }
+
   }
 }
