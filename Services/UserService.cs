@@ -12,24 +12,24 @@ namespace my_first_api_net.Services
 
     public async Task<IEnumerable<User>> GetAllUsersAsync()
     {
-      return await _context.users.ToListAsync();
+      return await _context.Users.ToListAsync();
     }
 
     public async Task<User?> GetUserById(Guid id)
     {
-      return await _context.users.FindAsync(id);
+      return await _context.Users.FindAsync(id);
     }
 
     public async Task<User> CreateUserAsync(User user)
     {
-      var entityEntry = await _context.users.AddAsync(user);
+      var entityEntry = await _context.Users.AddAsync(user);
       await _context.SaveChangesAsync();
       return entityEntry.Entity;
     }
 
     public async Task<User?> UpdateUserAsync(Guid id, UpdatedUser updatedUser)
     {
-      var user = await _context.users.FindAsync(id);
+      var user = await _context.Users.FindAsync(id);
 
       if (user is null)
       {
@@ -49,14 +49,14 @@ namespace my_first_api_net.Services
 
     public async Task<bool> DeleteUserAsync(Guid id)
     {
-      var user = await _context.users.FindAsync(id);
+      var user = await _context.Users.FindAsync(id);
 
       if (user == null)
       {
         return false;
       }
 
-      _context.users.Remove(user);
+      _context.Users.Remove(user);
       await _context.SaveChangesAsync();
 
       return true;

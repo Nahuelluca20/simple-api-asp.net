@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace my_first_api_net.Models.User
 {
+  [Table("users")]
   public class User
   {
     [Key]

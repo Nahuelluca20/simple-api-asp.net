@@ -6,6 +6,5 @@ namespace my_first_api_net.Models.Collection
 
     public string? Banner { get; set; }
 
-    public Guid UserId { get; set; }
   }
 }

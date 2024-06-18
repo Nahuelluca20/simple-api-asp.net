@@ -1,7 +1,5 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using my_first_api_net.Interfaces;
 using my_first_api_net.Models.User;
-using my_first_api_net.Services;
 
 namespace my_first_api_net.Controllers
 {
@@ -23,13 +21,13 @@ namespace my_first_api_net.Controllers
 
       app.MapPost("/users", async (HttpContext context, IUserService userService) =>
       {
-        var user = await context.Request.ReadFromJsonAsync<User>();
-        if (user == null)
+        var newUser = await context.Request.ReadFromJsonAsync<User>();
+        if (newUser == null)
         {
           return Results.BadRequest("User data is null");
         }
 
-        var createdUser = await userService.CreateUserAsync(user);
+        var createdUser = await userService.CreateUserAsync(newUser);
         return Results.Created($"/users/{createdUser.Id}", createdUser);
       });
 
