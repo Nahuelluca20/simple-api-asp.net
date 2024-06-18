@@ -8,6 +8,7 @@ using my_first_api_net.Services;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICollectionService, CollectionService>();
+builder.Services.AddScoped<ITaskService, TaskService>();
 
 static string HelloWord()
 {
@@ -34,5 +35,6 @@ var app = builder.Build();
 app.MapGet("/", HelloWord);
 app.MapUserEndpoints();
 app.MapCollectionEndpoints();
+app.MapTaskEndpoints();
 
 app.Run();

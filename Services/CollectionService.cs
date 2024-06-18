@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using my_first_api_net.Data;
 using my_first_api_net.Interfaces;
 using my_first_api_net.Models.Collection;
+using TaskModel = my_first_api_net.Models.Task.Task;
 
 namespace my_first_api_net.Services
 {
@@ -9,17 +10,11 @@ namespace my_first_api_net.Services
   {
     private readonly ApplicationDbContext _context = context;
 
-    public Task<IEnumerable<Models.Task.Task>> GetTasksOfCollectionAsync(Guid id)
+    public async Task<IEnumerable<TaskModel>> GetTasksOfCollectionAsync(Guid id)
     {
-      // var collection = await _context.Collections.FindAsync(id);
-      // if (collection is null)
-      // {
-      //   return null;
-      // }
-
-      // return collection.
-
-      throw new NotImplementedException();
+      return await _context.Tasks
+          .Where(task => task.CollectionId == id)
+          .ToListAsync();
     }
     public async Task<IEnumerable<Collection>> GetCollectionsAsync()
     {

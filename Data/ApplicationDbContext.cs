@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using my_first_api_net.Models.Collection;
+using my_first_api_net.Models.Task;
 using my_first_api_net.Models.User;
+using TaskModel = my_first_api_net.Models.Task.Task;
 
 namespace my_first_api_net.Data
 {
@@ -11,6 +13,8 @@ namespace my_first_api_net.Data
 
     public DbSet<Collection> Collections { get; set; }
 
+    public DbSet<TaskModel> Tasks { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
       modelBuilder.Entity<User>()
@@ -18,6 +22,9 @@ namespace my_first_api_net.Data
 
       modelBuilder.Entity<Collection>()
         .HasKey(c => c.Id);
+
+      modelBuilder.Entity<TaskModel>()
+      .HasKey(c => c.Id);
     }
 
   }

@@ -8,15 +8,26 @@ namespace my_first_api_net.Controllers
     public static WebApplication MapCollectionEndpoints(this WebApplication app)
     {
 
-      // app.MapGet("/collections/{id:guid}/task", (Guid id, ICollectionService collectionService) => "getTaskOfaCollection");
+      app.MapGet("/collections/{id:guid}/tasks", async (Guid id, ICollectionService collectionService) =>
+      {
+        var tasks = await collectionService.GetTasksOfCollectionAsync(id);
+        if (tasks == null || !tasks.Any())
+        {
+          return Results.NotFound();
+        }
+        return Results.Ok(tasks);
+      });
 
       app.MapGet("/collections", async (ICollectionService collectionService) => await collectionService.GetCollectionsAsync());
 
       app.MapGet("/collections/{id:guid}", async (Guid id, ICollectionService collectionService) =>
       {
-        var collection = await collectionService.GetCollectionById(id);
-
-        return collection == null ? Results.NotFound() : Results.Ok(collection);
+        var tasks = await collectionService.GetTasksOfCollectionAsync(id);
+        if (tasks == null || !tasks.Any())
+        {
+          return Results.NotFound();
+        }
+        return Results.Ok(tasks);
       });
 
       app.MapPost("/collections", async (HttpContext context, ICollectionService collectionService) =>
@@ -55,10 +66,10 @@ namespace my_first_api_net.Controllers
 
         if (!isDeleted)
         {
-          return Results.NotFound($"User with ID {id} not found");
+          return Results.NotFound($"Collection with ID {id} not found");
         }
 
-        return Results.Ok($"User with ID {id} deleted successfully");
+        return Results.Ok($"Collection with ID {id} deleted successfully");
       });
 
       return app;
